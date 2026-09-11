@@ -11,8 +11,8 @@ export async function POST(req: NextRequest) {
   if (!checkAdmin(req))
     return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
 
-  let body: { kid?: string; reason?: string }
-  try { body = await req.json() } catch { return NextResponse.json({ success: false, error: 'Invalid JSON' }, { status: 400 }) }
+  const body = await req.json().catch(() => null) as { kid?: string; reason?: string } | null
+  if (!body) return NextResponse.json({ success: false, error: 'Invalid JSON' }, { status: 400 })
 
   if (!body.kid)
     return NextResponse.json({ success: false, error: 'kid là bắt buộc' }, { status: 400 })
@@ -37,8 +37,8 @@ export async function DELETE(req: NextRequest) {
   if (!checkAdmin(req))
     return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
 
-  let body: { kid?: string }
-  try { body = await req.json() } catch { return NextResponse.json({ success: false, error: 'Invalid JSON' }, { status: 400 }) }
+  const body = await req.json().catch(() => null) as { kid?: string } | null
+  if (!body) return NextResponse.json({ success: false, error: 'Invalid JSON' }, { status: 400 })
 
   if (!body.kid)
     return NextResponse.json({ success: false, error: 'kid là bắt buộc' }, { status: 400 })

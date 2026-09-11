@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 
 export async function POST(req: NextRequest) {
-  let body: { kid?: string; machineId?: string }
-  try { body = await req.json() } catch { return err('Invalid JSON') }
+  const body = await req.json().catch(() => null) as
+    { kid?: string; machineId?: string } | null
+  if (!body) return err('Invalid JSON')
 
   const { kid, machineId } = body
   if (!kid || !machineId) return err('kid và machineId là bắt buộc')

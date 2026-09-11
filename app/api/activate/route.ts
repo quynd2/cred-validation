@@ -4,8 +4,9 @@ import { verifyLicense, isExpired } from '@/lib/verify'
 import type { LicensePayload, ActivateResponse } from '@/lib/types'
 
 export async function POST(req: NextRequest) {
-  let body: { licenseData?: string; machineId?: string; machineName?: string }
-  try { body = await req.json() } catch { return err('Invalid JSON') }
+  const body = await req.json().catch(() => null) as
+    { licenseData?: string; machineId?: string; machineName?: string } | null
+  if (!body) return err('Invalid JSON')
 
   const { licenseData, machineId, machineName } = body
   if (!licenseData || !machineId) return err('licenseData và machineId là bắt buộc')

@@ -3,8 +3,9 @@ import { supabase } from '@/lib/supabase'
 import type { AddAccountResponse } from '@/lib/types'
 
 export async function POST(req: NextRequest) {
-  let body: { kid?: string; machineId?: string; channelId?: string; channelName?: string }
-  try { body = await req.json() } catch { return err('Invalid JSON') }
+  const body = await req.json().catch(() => null) as
+    { kid?: string; machineId?: string; channelId?: string; channelName?: string } | null
+  if (!body) return err('Invalid JSON')
 
   const { kid, machineId, channelId, channelName } = body
   if (!kid || !machineId || !channelId)
